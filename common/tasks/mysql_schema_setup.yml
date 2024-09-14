@@ -3,11 +3,6 @@
     name: mysql
     state: present
 
-- name: Check if Schema exists or not
-  ansible.builtin.shell: echo show databases | mysql -h mysql-dev.devopsprojects.store -uroot -pRoboShop@1 | grep cities
-  ignore_errors: yes
-  register: stat
-
 
 - name: Load Schema
   ansible.builtin.shell: mysql -h mysql-dev.devopsprojects.store -uroot -pRoboShop@1 < /app/schema/{{ component }}.sql
