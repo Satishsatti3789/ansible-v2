@@ -12,22 +12,13 @@
   ansible.builtin.mysql_user:
     name: root
     password: RoboShop@1
-    host: localhost
+    host: mysql-dev.devopsprojects.store
     state: present
   become: yes
   become_method: sudo
 
-- name: Check if Schema exists or not
-  ansible.builtin.mysql_db:
-    name: cities
-    state: present
-    login_user: root
-    login_password: RoboShop@1
-    login_host: mysql-dev.devopsprojects.store
-  register: db_check
-  ignore_errors: yes
 
 - name: Load Schema
   ansible.builtin.command:
     cmd: mysql -h mysql-dev.devopsprojects.store -uroot -pRoboShop@1 < /app/schema/{{ component }}.sql
-  when: db_check.failed
+
