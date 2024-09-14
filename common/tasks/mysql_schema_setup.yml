@@ -3,15 +3,12 @@
     name: mysql
     state: present
 
-- name: Install PyMySQL for Python 2.7
-  ansible.builtin.pip:
-    name: PyMySQL
-    state: present
-
-- name: Update mysql password
-  ansible.builtin.shell: mysql_secure_installation --set-root-pass RoboShop@1
+- name: Check if Schema exists or not
+  ansible.builtin.shell: echo show databases | mysql -h mysql-dev.devopsprojects.store -uroot -pRoboShop@1 | grep cities
+  ignore_errors: yes
+  register: stat
 
 
 - name: Load Schema
   ansible.builtin.shell: mysql -h mysql-dev.devopsprojects.store -uroot -pRoboShop@1 < /app/schema/{{ component }}.sql
-
+  when: stat.rc != 0
