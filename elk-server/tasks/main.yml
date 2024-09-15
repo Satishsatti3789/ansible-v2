@@ -11,7 +11,7 @@
     - elasticsearch
     - kibana
     - logstash
-      -
+    
 - name: Start services
   ansible.builtin.systemd:
     name: "{{ item }}"
