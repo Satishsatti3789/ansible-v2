@@ -1,0 +1,32 @@
+- name: Copy Elastic Repo file
+  ansible.builtin.template:
+    src: elastic.repo
+    dest: /etc/yum.repos.d/elastic.repo
+
+- name: Install packages
+  ansible.builtin.yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - elasticsearch
+    - kibana
+    - logstash
+      -
+- name: Start services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: started
+  loop:
+    - elasticsearch
+    - kibana
+    - logstash
+
+- name: Copy LogStash Config
+  ansible.builtin.template:
+    src: logstash.conf
+    dest: /etc/logstash/conf.d/logstash.conf
+
+- name: Restart Logstash
+  ansible.builtin.systemd:
+    name: logstash
+    state: restarted
