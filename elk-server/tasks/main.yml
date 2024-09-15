@@ -11,22 +11,26 @@
     - elasticsearch
     - kibana
     - logstash
+    - nginx
     
-- name: Start services
-  ansible.builtin.systemd:
-    name: "{{ item }}"
-    state: started
-  loop:
-    - elasticsearch
-    - kibana
-    - logstash
+- name: Copy nginx Config
+  ansible.builtin.template:
+    src: http_proxy.conf
+    dest: /etc/nginx/nginx.conf
 
 - name: Copy LogStash Config
   ansible.builtin.template:
     src: logstash.conf
     dest: /etc/logstash/conf.d/logstash.conf
 
-- name: Restart Logstash
+- name: Start and enable services
   ansible.builtin.systemd:
-    name: logstash
-    state: restarted
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop:
+    - elasticsearch
+    - kibana
+    - logstash
+    - nginx
+
